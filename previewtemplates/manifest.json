@@ -1,0 +1,103 @@
+{
+  "categories": [
+    {
+      "id": "vitrines",
+      "label": "Vitrines",
+      "templates": [
+        {
+          "id": "basicos_burgundy_fem",
+          "label": "Basicos Burgundy Fem",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/basicos_burgundy_fem/index.html"
+            }
+          ]
+        },
+        {
+          "id": "basicos_burgundy_mas",
+          "label": "Basicos Burgundy Mas",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/basicos_burgundy_mas/index.html"
+            }
+          ]
+        },
+        {
+          "id": "basicos_burgundy_misto",
+          "label": "Basicos Burgundy Misto",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/basicos_burgundy_misto/index.html"
+            }
+          ]
+        },
+        {
+          "id": "boas_vindas_semana_1",
+          "label": "Boas Vindas Semana 1",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/boas_vindas_semana_1/index.html"
+            }
+          ]
+        },
+        {
+          "id": "dinamizacao_jornada",
+          "label": "Dinamizacao Jornada",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/dinamizacao_jornada/index.html"
+            }
+          ]
+        },
+        {
+          "id": "escuta_ativa_w23",
+          "label": "Escuta Ativa W23",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/escuta_ativa_w23/index.html"
+            }
+          ]
+        },
+        {
+          "id": "footer_new_in",
+          "label": "Footer New In",
+          "files": [
+            {
+              "name": "12052026_footer_jeans",
+              "label": "Footer Jeans",
+              "path": "vitrines/footer_new_in/12052026_footer_jeans.html"
+            },
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/footer_new_in/index.html"
+            }
+          ]
+        },
+        {
+          "id": "pos1e2_compra_kis",
+          "label": "Pos1e2 Compra Kis",
+          "files": [
+            {
+              "name": "index",
+              "label": "index",
+              "path": "vitrines/pos1e2_compra_kis/index.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
