@@ -1,6 +1,11 @@
 {
   "categories": [
     {
+      "id": "banner_principal",
+      "label": "Banner Principal",
+      "templates": []
+    },
+    {
       "id": "vitrines",
       "label": "Vitrines",
       "templates": [
@@ -98,6 +103,16 @@
           ]
         }
       ]
+    },
+    {
+      "id": "banners_diversos",
+      "label": "Banners Diversos",
+      "templates": []
+    },
+    {
+      "id": "emails_completos",
+      "label": "Emails Completos",
+      "templates": []
     }
   ]
 }

@@ -59,15 +59,22 @@
     }
 
     .sidebar-brand .logo-icon {
-      width: 32px;
-      height: 32px;
+      width: 48px;
+      height: 48px;
       background: linear-gradient(135deg, #388bfd, #6e40c9);
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
       flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-brand .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 5px;
     }
 
     .sidebar-brand h1 {
@@ -168,14 +175,7 @@
       font-size: 11px;
       color: #484f58;
       line-height: 1.5;
-    }
-
-    .sidebar-footer code {
-      font-size: 10px;
-      background: #161b22;
-      color: #79c0ff;
-      padding: 1px 5px;
-      border-radius: 3px;
+      text-align: center;
     }
 
     /* ─── MAIN CONTENT ─────────────────────────────────── */
@@ -628,7 +628,7 @@
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="logo">
-        <div class="logo-icon">✉</div>
+        <div class="logo-icon"><img src="./assets/thinkers.png" alt="Logo"></div>
         <h1>Preview Studio</h1>
       </div>
       <p>Vitrine de Email Marketing</p>
@@ -642,8 +642,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      Adicione pastas com HTMLs e rode<br>
-      <code>generate-manifest.py</code> para atualizar
+      Created by Anderson Garcia Pinheiro
     </div>
   </aside>
 

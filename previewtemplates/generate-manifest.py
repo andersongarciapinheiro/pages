@@ -9,6 +9,11 @@ Estrutura esperada:
         outro.html
         images/
 
+Ordem das categorias no menu (edite conforme necessário):
+  banner_principal → Banner Principal
+  vitrines         → Vitrines
+  banners_diversos → Banners Diversos
+
 Uso:
   python generate-manifest.py
 """
@@ -20,9 +25,16 @@ import re
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT   = os.path.join(BASE_DIR, 'manifest.json')
 
-SKIP_DIRS  = {'images', '.vscode', '.git', '__pycache__', 'node_modules', '.idea'}
-SKIP_FILES = {'index.html'}  # nunca pular — incluir tudo
-SKIP_SELF  = {'index.html'}  # o próprio index.html do previewtemplates, não das subpastas
+SKIP_DIRS = {'images', 'assets', '.vscode', '.git', '__pycache__', 'node_modules', '.idea'}
+
+# Ordem fixa das categorias no menu lateral.
+# Pastas não listadas aqui aparecem ao final em ordem alfabética.
+CATEGORY_ORDER = [
+    'banner_principal',
+    'vitrines',
+    'banners_diversos',
+    'emails_completos',
+]
 
 
 def prettify(name: str) -> str:
@@ -43,70 +55,72 @@ def label_from_file(filename: str) -> str:
     return prettify(stem)
 
 
-def scan() -> dict:
-    categories = []
+def scan_category(cat_name: str, cat_path: str) -> dict:
+    """Escaneia uma pasta de categoria e retorna seu objeto com templates."""
+    templates = {}  # group_id → {id, label, files[]}
 
-    entries = sorted(os.listdir(BASE_DIR))
-    for cat_name in entries:
-        cat_path = os.path.join(BASE_DIR, cat_name)
+    for root, dirs, files in os.walk(cat_path):
+        dirs[:] = sorted([
+            d for d in dirs
+            if d not in SKIP_DIRS and not d.startswith('.')
+        ])
 
-        # Ignora arquivos, pastas ocultas, pastas de skip e a própria raiz
-        if not os.path.isdir(cat_path):
+        html_files = sorted([f for f in files if f.endswith('.html')])
+        if not html_files:
             continue
-        if cat_name.startswith('.') or cat_name in SKIP_DIRS:
-            continue
 
-        templates = {}  # group_id → {id, label, files[]}
+        rel_root = os.path.relpath(root, cat_path)
+        parts    = rel_root.replace('\\', '/').split('/')
 
-        for root, dirs, files in os.walk(cat_path):
-            # Prune dirs in-place to skip unwanted folders
-            dirs[:] = sorted([
-                d for d in dirs
-                if d not in SKIP_DIRS and not d.startswith('.')
-            ])
+        if rel_root == '.':
+            group_id    = cat_name
+            group_label = prettify(cat_name)
+        else:
+            group_id    = parts[0]
+            group_label = prettify(parts[0])
 
-            html_files = sorted([f for f in files if f.endswith('.html')])
-            if not html_files:
-                continue
+        if group_id not in templates:
+            templates[group_id] = {
+                'id':    group_id,
+                'label': group_label,
+                'files': []
+            }
 
-            # Determina o grupo a partir do primeiro nível de subpasta
-            rel_root  = os.path.relpath(root, cat_path)
-            parts     = rel_root.replace('\\', '/').split('/')
-
-            if rel_root == '.':
-                # HTMLs diretamente na pasta da categoria (raro)
-                group_id    = cat_name
-                group_label = prettify(cat_name)
-            else:
-                group_id    = parts[0]
-                group_label = prettify(parts[0])
-
-            if group_id not in templates:
-                templates[group_id] = {
-                    'id':    group_id,
-                    'label': group_label,
-                    'files': []
-                }
-
-            for fname in html_files:
-                full   = os.path.join(root, fname)
-                # Caminho relativo a BASE_DIR (ex: vitrines/basicos_burgundy_fem/index.html)
-                rel    = os.path.relpath(full, BASE_DIR).replace('\\', '/')
-                stem   = os.path.splitext(fname)[0]
-                flabel = label_from_file(fname)
-
-                templates[group_id]['files'].append({
-                    'name':  stem,
-                    'label': flabel,
-                    'path':  rel
-                })
-
-        if templates:
-            categories.append({
-                'id':        cat_name,
-                'label':     prettify(cat_name),
-                'templates': list(templates.values())
+        for fname in html_files:
+            full   = os.path.join(root, fname)
+            rel    = os.path.relpath(full, BASE_DIR).replace('\\', '/')
+            stem   = os.path.splitext(fname)[0]
+            templates[group_id]['files'].append({
+                'name':  stem,
+                'label': label_from_file(fname),
+                'path':  rel
             })
+
+    return {
+        'id':        cat_name,
+        'label':     prettify(cat_name),
+        'templates': list(templates.values())
+    }
+
+
+def scan() -> dict:
+    # Descobre todas as pastas de categoria válidas
+    all_dirs = {
+        name for name in os.listdir(BASE_DIR)
+        if os.path.isdir(os.path.join(BASE_DIR, name))
+        and not name.startswith('.')
+        and name not in SKIP_DIRS
+    }
+
+    # Ordena: primeiro as da lista fixa, depois o restante alfabético
+    ordered = [d for d in CATEGORY_ORDER if d in all_dirs]
+    extras  = sorted(all_dirs - set(CATEGORY_ORDER))
+    ordered += extras
+
+    categories = []
+    for cat_name in ordered:
+        cat_path = os.path.join(BASE_DIR, cat_name)
+        categories.append(scan_category(cat_name, cat_path))
 
     return {'categories': categories}
 
